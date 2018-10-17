@@ -1,0 +1,15 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t jonricaurte/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run jonricaurte/react-test npm run test -- --coverage
+
+after_success:
+  - docker build -t jonricaurte/multi-client ./client
+  - docker build -t jonricaurte/multi-nginx ./nginx
+  - docker build -t jonricaurte/multi-server ./server
+  - docker build -t jonricaurte/multi-worker ./worker
